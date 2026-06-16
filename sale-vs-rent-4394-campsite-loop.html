@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sale vs. Rent Analysis | 4394 Campsite Loop | Verandah Properties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#008C82; --teal-deep:#066b63;
+    --gold:#D4AF50; --gold-soft:#e9d9a8;
+    --charcoal:#1A1A1A; --ink:#34322d; --muted:#6c6a63;
+    --paper:#FBFAF7; --soft:#f2efe7; --line:#e6e1d6;
+    --pos:#2f7d62; --neg:#b0563a; --negbg:#fbf1ec;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--soft);color:var(--ink);font-family:'Jost',sans-serif;line-height:1.62;-webkit-font-smoothing:antialiased;padding:34px 16px;}
+  .sheet{max-width:880px;margin:0 auto;background:var(--paper);border:1px solid var(--line);box-shadow:0 22px 60px rgba(26,26,26,.10);overflow:hidden;}
+
+  .topbar{background:var(--charcoal);color:#fff;text-align:center;padding:20px 40px 16px;position:relative;}
+  .topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--teal) 0%,var(--teal) 62%,var(--gold) 62%,var(--gold) 100%);}
+  .topbar .brand{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;letter-spacing:.5px;}
+  .topbar .brand .pm{color:var(--gold);}
+  .topbar .tl{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:#bdbbb4;margin-top:4px;}
+
+  .hero{padding:42px 48px 34px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--teal-deep);font-weight:500;}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--charcoal);font-size:40px;line-height:1.08;margin:12px 0 16px;}
+  .hero h1 em{color:var(--teal-deep);font-style:italic;}
+  .addr{font-size:15px;color:var(--ink);font-weight:500;margin:0 0 4px;}
+  .facts{font-size:13px;color:var(--muted);letter-spacing:.3px;margin:0 0 14px;}
+  .prep{font-size:12px;color:var(--muted);font-style:italic;border-top:1px solid var(--line);padding-top:12px;margin:0;}
+
+  /* stat tiles */
+  .stats{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--line);}
+  .stat{flex:1 1 25%;min-width:160px;padding:24px 26px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .stat .v{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;color:var(--charcoal);line-height:1.05;margin:6px 0 4px;}
+  .stat .d{font-size:11.5px;color:var(--muted);line-height:1.4;}
+
+  section{padding:36px 48px;border-bottom:1px solid var(--line);}
+  .kicker{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px;}
+  h2{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--teal-deep);font-size:28px;line-height:1.14;margin:0 0 14px;}
+  h2 em{font-style:italic;color:var(--charcoal);}
+  p{margin:0 0 14px;font-size:14.5px;}
+  p:last-child{margin-bottom:0;}
+  strong{color:var(--charcoal);font-weight:600;}
+
+  /* two paths */
+  .paths{display:flex;gap:16px;flex-wrap:wrap;}
+  .pathcard{flex:1 1 320px;background:#fff;border:1px solid var(--line);padding:22px 24px;}
+  .pathcard.a{border-top:3px solid var(--neg);}
+  .pathcard.b{border-top:3px solid var(--teal);}
+  .pathcard .tag{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;font-weight:600;}
+  .pathcard.a .tag{color:var(--neg);}
+  .pathcard.b .tag{color:var(--teal);}
+  .pathcard h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--charcoal);font-weight:600;margin:4px 0 10px;}
+  .pathcard ul{list-style:none;margin:0;padding:0;}
+  .pathcard li{position:relative;padding-left:18px;margin-bottom:9px;font-size:13.5px;}
+  .pathcard li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;transform:rotate(45deg);}
+  .pathcard.a li::before{background:var(--neg);}
+  .pathcard.b li::before{background:var(--teal);}
+
+  /* holding cost */
+  .ledger{background:#fff;border:1px solid var(--line);padding:20px 24px;margin-top:6px;}
+  .ledger .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .ledger .row:last-of-type{border-bottom:none;}
+  .ledger .row.tot{border-top:2px solid var(--charcoal);border-bottom:none;margin-top:6px;padding-top:12px;font-weight:600;color:var(--charcoal);font-size:15px;}
+  .ledger .row .free{color:var(--pos);font-weight:500;}
+  .twin{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;}
+  .twin .b{flex:1 1 220px;background:var(--charcoal);color:#fff;padding:20px 22px;text-align:center;}
+  .twin .b .big{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--gold-soft);}
+  .twin .b .lab{font-size:12px;color:#cfcdc7;margin-top:6px;line-height:1.4;}
+
+  /* comp table */
+  .tblwrap{overflow-x:auto;margin-top:4px;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:560px;}
+  th{background:var(--teal-deep);color:#fff;font-weight:500;text-align:left;padding:9px 10px;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr.subj{background:#fbf6e9;}
+  tr.subj td{font-weight:600;color:var(--charcoal);}
+  td .sub{display:block;font-size:11px;color:var(--muted);font-weight:400;}
+  .fast{color:var(--pos);font-weight:600;}
+  .slow{color:var(--neg);font-weight:600;}
+
+  /* anchors */
+  .anchors{display:flex;gap:16px;flex-wrap:wrap;}
+  .anchor{flex:1 1 300px;background:#fff;border:1px solid var(--line);padding:22px 24px;}
+  .anchor .tag{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;}
+  .anchor .price{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--teal-deep);line-height:1;margin:6px 0 2px;}
+  .anchor .psf{font-size:12px;color:var(--muted);margin-bottom:10px;}
+  .anchor h4{font-family:'Jost',sans-serif;font-size:14px;color:var(--charcoal);margin:0 0 6px;}
+  .anchor p{font-size:13px;color:var(--ink);margin:0 0 10px;}
+  .anchor .gross{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--charcoal);font-weight:600;}
+
+  /* pro forma */
+  .pf{background:#fff;border:1px solid var(--line);padding:20px 24px;margin-top:6px;}
+  .pf .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .pf .row:last-of-type{border-bottom:none;}
+  .pf .row.gross{color:var(--charcoal);font-weight:600;}
+  .pf .row.net{border-top:2px solid var(--charcoal);border-bottom:none;margin-top:6px;padding-top:12px;font-weight:600;font-size:15px;color:var(--pos);}
+  .pf .row .neg{color:var(--neg);}
+
+  .callout{background:var(--charcoal);color:#eceae4;padding:22px 26px;margin-top:6px;}
+  .callout .k{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:10px;}
+  .callout ul{list-style:none;margin:0;padding:0;}
+  .callout li{position:relative;padding-left:20px;margin-bottom:8px;font-size:14px;color:#eceae4;}
+  .callout li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700;}
+  .callout li b{color:#fff;font-weight:600;}
+  .callout .note{font-size:12px;color:#aaa8a1;margin-top:10px;font-style:italic;}
+
+  /* why verandah */
+  .feat{display:flex;gap:16px;flex-wrap:wrap;}
+  .fc{flex:1 1 230px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--teal);padding:18px 20px;}
+  .fc .rn{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:18px;}
+  .fc h4{font-family:'Jost',sans-serif;font-size:14.5px;color:var(--charcoal);margin:4px 0 6px;}
+  .fc p{font-size:13px;color:var(--ink);margin:0;}
+
+  /* CTA */
+  .cta{background:var(--charcoal);color:#fff;text-align:center;padding:46px 48px;}
+  .cta .kicker{color:var(--gold);}
+  .cta h2{color:#fff;max-width:30ch;margin:6px auto 8px;}
+  .cta h2 em{color:var(--gold-soft);}
+  .cta p{color:#cfcdc7;max-width:56ch;margin:0 auto 22px;font-size:14px;}
+  .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn{display:inline-block;padding:13px 26px;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:500;text-decoration:none;}
+  .btn.gold{background:var(--gold);color:var(--charcoal);}
+  .btn.ghost{border:1px solid var(--gold-soft);color:var(--gold-soft);}
+
+  .disclaimer{padding:20px 48px 28px;font-size:10.5px;color:#9a988f;line-height:1.5;}
+
+  @media print{body{background:#fff;padding:0;}.sheet{box-shadow:none;border:none;max-width:none;}}
+  @media(max-width:640px){
+    .hero,section,.cta,.disclaimer,.topbar{padding-left:22px;padding-right:22px;}
+    .hero h1{font-size:30px;}h2{font-size:24px;}
+    .stat{flex-basis:50%;border-bottom:1px solid var(--line);}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="topbar">
+    <div class="brand">Verandah <span class="pm">Properties</span></div>
+    <div class="tl">Curating Lake Nona's Finest Rental Portfolio</div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Sale vs. Rent Strategy Analysis</div>
+    <h1>Grace — the sale has been slow. <em>Your rental market is moving in weeks.</em></h1>
+    <p class="addr">4394 Campsite Loop · Tyson Ranch · Orlando, FL 32824 (Lake Nona West)</p>
+    <p class="facts">4 Bed · 3 Bath · 1,769 SF · End Unit · Pond View · Built 2023 · Community Pool</p>
+    <p class="prep">Prepared for Grace Twitty · June 16, 2026 · Pamela Syvertson, Broker · Verandah Properties LLC</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="k">Recommended Rent</div>
+      <div class="v">$2,650–$2,800</div>
+      <div class="d">~3–5 week lease-up</div>
+    </div>
+    <div class="stat">
+      <div class="k">Days on Sale Market</div>
+      <div class="v">147</div>
+      <div class="d">and still active</div>
+    </div>
+    <div class="stat">
+      <div class="k">Sale Price Cuts</div>
+      <div class="v">$25,000</div>
+      <div class="d">$465,000 → $440,000</div>
+    </div>
+    <div class="stat">
+      <div class="k">Below 2024 Purchase</div>
+      <div class="v">$41,800</div>
+      <div class="d">paid $481,800 · Feb 2024</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="kicker">Executive Summary</div>
+    <h2>A pristine, show-ready townhome that's hard to sell today — <em>and easy to rent right now.</em></h2>
+    <p>Your end-unit townhome has sat on the sale market for <strong>147 days</strong>, through <strong>$25,000 in price reductions</strong> from $465,000 to $440,000 — and even at today's list it sits roughly $41,800 below the $481,800 you paid in February 2024, before the 6–8% in selling costs a sale would carry. In a market still crowded with builder inventory and resales, selling now most likely means locking in a loss.</p>
+    <p>Meanwhile, the rental side of this same community is moving briskly: comparable Tyson Ranch townhomes have leased in <strong>16 to 37 days</strong> at <strong>$2,500 to $2,800</strong>, your HOA permits leasing with no waiting period and no approval required, and your home — a 2023 end unit with a pond view and no rear neighbors — sits at the top of that peer set. <strong>Renting turns a stalled sale into monthly income, and keeps your option to sell open for a stronger day.</strong> This analysis lays out both paths so the decision is yours, with clear numbers in hand.</p>
+  </section>
+
+  <section>
+    <div class="kicker">The Decision</div>
+    <h2>Two paths — and the case for keeping both open</h2>
+    <div class="paths">
+      <div class="pathcard a">
+        <div class="tag">Path A · Continue the Sale</div>
+        <h3>Patience with a cost</h3>
+        <ul>
+          <li><strong>147 days</strong> on market and counting, with no contract yet.</li>
+          <li><strong>$25,000</strong> already cut from the price ($465K → $440K).</li>
+          <li>Competing directly with <strong>builder inventory and incentives</strong> plus other resales.</li>
+          <li>At $440K, already <strong>~$41,800 under your 2024 purchase</strong> — before selling costs deepen the gap.</li>
+          <li>The market may recover, but <strong>a sale today likely realizes a loss</strong>.</li>
+        </ul>
+      </div>
+      <div class="pathcard b">
+        <div class="tag">Path B · Pivot to Rent</div>
+        <h3>Income now, optionality later</h3>
+        <ul>
+          <li>Comparable Tyson Ranch homes leasing in <strong>16–37 days</strong> at <strong>$2,500–$2,800</strong>.</li>
+          <li>HOA allows leasing — <strong>no waiting period, no approval required</strong>.</li>
+          <li>Generates <strong>monthly income</strong> instead of monthly carrying cost.</li>
+          <li>Lets you <strong>sell later from strength</strong> — into a healthier market, once values recover.</li>
+          <li>Your end-unit pond view earns the <strong>top of the rent range</strong>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker">The Cost of Waiting</div>
+    <h2>While the sale sits, the home still <em>charges you every month.</em></h2>
+    <p>Your townhome is currently vacant while it's marketed for sale. Even with no mortgage, the property carries a real monthly cost — and your HOA actually keeps it lower than most, since grounds, pool, and pest are bundled into the dues.</p>
+    <div class="ledger">
+      <div class="row"><span>HOA dues</span><span>$228.53</span></div>
+      <div class="row"><span>Property tax + assessments (2025 ÷ 12)</span><span>$478.00</span></div>
+      <div class="row"><span>Insurance (est.)</span><span>$130.00</span></div>
+      <div class="row"><span>Utilities, kept on for showings (est.)</span><span>$120.00</span></div>
+      <div class="row"><span>Lawn · pool · pest</span><span class="free">Covered by HOA</span></div>
+      <div class="row tot"><span>Estimated monthly carrying cost</span><span>≈ $956.53</span></div>
+    </div>
+    <div class="twin">
+      <div class="b"><div class="big">~$4,600</div><div class="lab">Carrying cost absorbed over 147 vacant days — conservative, no mortgage.</div></div>
+      <div class="b"><div class="big">$25,000</div><div class="lab">Plus realized price reductions. The sale side has spoken; the rental side is ready to.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker">Comparable Rental Analysis</div>
+    <h2>The Tyson Ranch comps tell one story: <em>priced right, these homes lease fast.</em></h2>
+    <p>Every leased comparable on file is in your own community — same builder product, same floor plans. The pattern is clear: homes priced to the market leased in weeks, and the top of the achieved range ($2,800) is being set by homes with fewer advantages than yours.</p>
+    <div class="tblwrap">
+      <table>
+        <thead>
+          <tr><th>Address</th><th>Built</th><th>SF</th><th>List → Leased</th><th>Days</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr class="subj"><td>4394 CAMPSITE LOOP<span class="sub">SUBJECT · End unit · Pond</span></td><td>2023</td><td>1,769</td><td>$2,650–$2,800 target</td><td>—</td><td>End-unit privacy + pond view — top of peer set</td></tr>
+          <tr><td>4698 Campsite Loop</td><td>2025</td><td>1,769</td><td>$2,850 → $2,800</td><td class="fast">37</td><td>Top achieved rent in the comp set</td></tr>
+          <tr><td>4710 Campsite Loop<span class="sub">Pending</span></td><td>2025</td><td>1,769</td><td>$2,800 (pending)</td><td class="fast">32</td><td>Confirms $2,800 demand right now</td></tr>
+          <tr><td>4603 Campsite Loop</td><td>2024</td><td>1,769</td><td>$2,700 → $2,700</td><td class="fast">35</td><td>Priced right · leased at 100% of list</td></tr>
+          <tr><td>4365 Campsite Loop</td><td>2023</td><td>1,769</td><td>$2,500 → $2,500</td><td class="fast">16</td><td>Priced aggressively low · leased in 16 days</td></tr>
+          <tr><td>4424 Campsite Loop</td><td>2024</td><td>1,677</td><td>$2,600 → $2,600</td><td class="slow">115</td><td>Smallest floor plan · slower lease-up</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">Leased comps average <strong>$2,650</strong> (median $2,650), but the two homes that reached <strong>$2,800</strong> — one leased, one pending — define the ceiling, and neither offers your end-unit privacy or pond view. The lone slow comp (115 days) was the smallest unit in the group. The takeaway: demand is strong, and precise pricing is what separates a three-week lease from a three-month one.</p>
+  </section>
+
+  <section>
+    <div class="kicker">Pricing Strategy</div>
+    <h2>A defensible range — <em>with clear logic at both ends.</em></h2>
+    <div class="anchors">
+      <div class="anchor">
+        <div class="tag">Low Anchor · Maximum Velocity</div>
+        <div class="price">$2,650</div>
+        <div class="psf">≈ $1.50/sf · 2–3 week lease target</div>
+        <h4>Lease fast, capture certainty</h4>
+        <p>Right at the leased median, comfortably above the 16-day comp, and positioned to be the obvious top-of-shortlist choice. Expect strong application volume in the first two weekends.</p>
+        <div class="gross">Annualized gross: $31,800</div>
+      </div>
+      <div class="anchor">
+        <div class="tag">High Anchor · Premium Capture</div>
+        <div class="price">$2,800</div>
+        <div class="psf">≈ $1.58/sf · 3–5 week lease target</div>
+        <h4>Maximum value, still fast</h4>
+        <p>Matches the top leased comp and the current pending lease — and is justified by what those homes lack: your end-unit privacy, pond view, and pristine 2023 finish. The right resident will recognize it.</p>
+        <div class="gross">Annualized gross: $33,600</div>
+      </div>
+    </div>
+    <p style="margin-top:16px;">The $150/month spread is roughly <strong>$1,800 over a 12-month term</strong> — the value of capturing the high end. Given your home's genuine advantages, we'd <strong>launch at $2,800</strong> with the discipline to adjust quickly if the first two weekends are quiet, and a firm floor of <strong>$2,650</strong>.</p>
+  </section>
+
+  <section>
+    <div class="kicker">The Income Picture</div>
+    <h2>What renting actually puts in your pocket</h2>
+    <p>At the recommended launch of $2,800/month, here is the estimated annual picture. One honest note built in: as a rental, the homestead exemption is removed, which raises annual property tax to roughly $6,200 — reflected below.</p>
+    <div class="pf">
+      <div class="row gross"><span>Gross annual rent ($2,800 × 12)</span><span>$33,600</span></div>
+      <div class="row"><span>Management @ 7% (preferred corridor rate)</span><span class="neg">−$2,352</span></div>
+      <div class="row"><span>HOA dues (incl. grounds, pool, pest)</span><span class="neg">−$2,742</span></div>
+      <div class="row"><span>Property tax, no homestead (est.)</span><span class="neg">−$6,200</span></div>
+      <div class="row"><span>Landlord insurance (est.)</span><span class="neg">−$1,500</span></div>
+      <div class="row"><span>Maintenance reserve, newer home (est.)</span><span class="neg">−$1,000</span></div>
+      <div class="row net"><span>Estimated net before debt service</span><span>≈ $19,800/yr  ·  ~$1,650/mo</span></div>
+    </div>
+    <div class="twin">
+      <div class="b"><div class="big" style="color:#e7a98f;">−$957</div><div class="lab">Per month today: a vacant home for sale</div></div>
+      <div class="b"><div class="big" style="color:var(--gold-soft);">+$1,650</div><div class="lab">Per month leased: estimated net income</div></div>
+    </div>
+    <p style="margin-top:16px;"><strong>That's roughly a $2,600-per-month swing in your favor</strong> — from a home that charges you each month to one that pays you. Your mortgage, if any, is yours to layer in; a one-time leasing fee (50% of one month's rent) and your first year of SureVestor Landlord Shield coverage are accounted for separately.</p>
+  </section>
+
+  <section>
+    <div class="kicker">Good News on the Rules</div>
+    <h2>Your HOA makes this easy</h2>
+    <div class="callout">
+      <div class="k">Tyson Ranch Townhome Owners Association (Rizzetta)</div>
+      <ul>
+        <li><b>Leasing is permitted</b> — no association approval required.</li>
+        <li><b>No ownership-waiting period</b> — you can lease right away.</li>
+        <li><b>Minimum lease 8–12 months</b>, whole-home only (no room-by-room) — exactly our model.</li>
+        <li><b>Dues include grounds, community pool, and pest control</b> — lowering your separate upkeep.</li>
+      </ul>
+      <div class="note">We'll reconfirm all current rules and any application fee directly with the HOA before listing.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker">Why Verandah</div>
+    <h2>Risk management is the product. <em>Rent collection is the byproduct.</em></h2>
+    <div class="feat">
+      <div class="fc"><div class="rn">i.</div><h4>SureVestor Landlord Shield</h4><p>Eviction, malicious damage, and rent-default coverage included with your Verandah-managed lease — the risks that wipe out a year of cash flow, neutralized.</p></div>
+      <div class="fc"><div class="rn">ii.</div><h4>Experian Rent Reporting</h4><p>Residents whose on-time rent builds their credit tend to pay on time. A behavioral system, not a hopeful policy.</p></div>
+      <div class="fc"><div class="rn">iii.</div><h4>Hyper-Local Marketing</h4><p>Targeted outreach to Medical City and Lake Nona-bound renters, backed by 20+ years of submarket positioning.</p></div>
+      <div class="fc"><div class="rn">iv.</div><h4>Move-In-Ready Standard</h4><p>We only manage homes presented to a high standard, because condition is what attracts accountable residents — and yours already meets it beautifully.</p></div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <div class="kicker">Next Step</div>
+    <h2>Grace — whenever you're ready, <em>let's talk it through.</em></h2>
+    <p>No pressure, and no need to abandon your sale — just a clear-eyed look at both paths. If renting makes sense, Verandah handles the full transition: rental marketing, screening, lease execution, and ongoing management at our preferred 7% corridor rate — turning a daily cost center into a monthly income stream with as little friction on your end as possible.</p>
+    <div class="btns">
+      <a class="btn gold" href="tel:+14074155478">Call Pamela · (407) 415-5478</a>
+      <a class="btn ghost" href="https://www.verandahproperties.com">VerandahProperties.com</a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This document is a sale-vs-rent strategy analysis prepared by Pamela Syvertson, Broker, on behalf of Verandah Properties LLC. It is an opinion of value and not an appraisal. Holding-cost and operating estimates are illustrative and based on publicly available Orange County Property Appraiser tax records, disclosed HOA figures, and conservative line-item assumptions for insurance, utilities, and maintenance; the post-homestead tax figure is an estimate of the rental scenario. Comparable rental data sourced from Stellar MLS as of June 16, 2026. HOA leasing rules should be reconfirmed directly with the association. Information believed reliable but not guaranteed; recipient should verify all figures independently before making any management or financial decision.
+  </div>
+
+</div>
+</body>
+</html>
